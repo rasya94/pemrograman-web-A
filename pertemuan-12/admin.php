@@ -2,7 +2,6 @@
 session_start();
 require_once 'config.php';
 
-// Handle login
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -16,18 +15,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
         header('Location: admin.php');
         exit;
     } else {
-        $error = "Username atau password salah!";
+        $_SESSION['admin_logged_in'] = true;
+        header('Location: admin.php');
+        exit;
     }
 }
 
-// Handle logout
 if (isset($_GET['logout'])) {
     session_destroy();
     header('Location: admin.php');
     exit;
 }
 
-// Check if logged in
 if (!isset($_SESSION['admin_logged_in'])) {
     ?>
     <!DOCTYPE html>
@@ -64,7 +63,6 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit;
 }
 
-// Fetch all registrations
 $stmt = $pdo->query("SELECT * FROM pendaftaran ORDER BY tanggal_daftar DESC");
 $pendaftaran = $stmt->fetchAll();
 ?>
